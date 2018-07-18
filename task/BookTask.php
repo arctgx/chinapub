@@ -4,6 +4,12 @@ class BookTask extends TaskBase {
 
     protected $_task_id;
 
+    public function beforTask() {
+        $logFile = 'book_task.log.'.date('Ymd');
+        Log::setLogFile($logFile);
+        return parent::beforTask();
+    }
+
     // 更新book详细数据
     // php -f cli.php Book Update
     public function UpdateAction() {
@@ -43,6 +49,7 @@ class BookTask extends TaskBase {
 
                 // 获取推荐图书列表
                 $recBooks = Parser::extractBookIDs($htmlContents, $bookID);
+                Log::notice('rec book num['.count($recBooks).']');
 
                 $dataService->updateBook($ID, $bookID, $bookInfo, $recBooks);
             }

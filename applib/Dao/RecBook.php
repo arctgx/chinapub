@@ -5,6 +5,8 @@ class Dao_RecBook extends DaoBase {
     protected $_table = 'rec_book';
 
     public function save($fromID, $toID) {
+        $db = $db = $this->getDB();
+
         $curTime = time();
         $sql = sprintf(
             'INSERT INTO `%s` (book_id_from, book_id_to, create_at, update_at) VALUES (%d, %d, %d, %d)',
@@ -20,6 +22,8 @@ class Dao_RecBook extends DaoBase {
     }
 
     public function queryInfo($fromID, $toID) {
+        $db = $db = $this->getDB();
+
         $sql = sprintf(
             'SELECT * FROM `%s` WHERE book_id_from=:book_id_from AND book_id_to=:book_id_to',
             $this->_table

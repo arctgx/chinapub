@@ -4,6 +4,12 @@ class HomePageTask extends TaskBase {
 
     protected $_task_id;
 
+    public function beforTask() {
+        $logFile = 'homepage_task.log.'.date('Ymd');
+        Log::setLogFile($logFile);
+        return parent::beforTask();
+    }
+
     // php -f cli.php HomePage Spider
     public function SpiderAction() {
         $this->_task_id = sprintf('homepage_task_%d', time());

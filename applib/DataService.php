@@ -55,7 +55,7 @@ class DataService {
             return $recBookInfo['id'];
         }
 
-        return $recBookInfo->save($fromID, $toID);
+        return $daoRecBook->save($fromID, $toID);
     }
 
     public function getUnProcessList($lastID) {
@@ -74,8 +74,8 @@ class DataService {
         );
         $this->_dao_book->update($bookTableID, $bookUpData);
 
-        if (!empty($recBookInfo)) {
-            foreach ($recBookInfo as $oneRecBookID) {
+        if (!empty($recBookList)) {
+            foreach ($recBookList as $oneRecBookID) {
                 self::checkAndSaveBook($oneRecBookID, $bookID);
                 self::checkAndSaveRecBook($bookID, $oneRecBookID);
             }
