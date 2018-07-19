@@ -109,7 +109,7 @@ class Parser {
 
     protected static function _get_cover_url($htmlContents) {
 
-        $startTag = 'class="gray12a"';
+        $startTag = '<dt class="book_s">';
         $startIdx = strpos($htmlContents, $startTag);
         if ($startIdx === false) {
             $strLog = sprintf('get cover_url fail, can not find start_tag[%s]', $startTag);
