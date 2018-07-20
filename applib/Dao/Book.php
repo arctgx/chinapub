@@ -43,6 +43,34 @@ class Dao_Book extends DaoBase {
         return empty($dataRet) ? array() : $dataRet;
     }
 
+    public function getInfoByBookIDList($bookIDList) {
+        $db = $this->getDB();
+        if (!is_array($bookIDList) || empty($bookIDList)) {
+            return array();
+        }
+        $bookIDList = array_unique($bookIDList);
+        $bookIDList = array_map('intval', $bookIDList);
+
+        $sql = sprintf(
+            'SELECT * FROM `%s` WHERE book_id IN (%s)',
+            $this->_table, implode(',', $bookIDList)
+        );
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $queryRet = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        if (empty($queryRet)) {
+            return array();
+        }
+
+        $converRet = array();
+        foreach ($queryRet as $item) {
+            $converRet[$item['book_id']] = $item;
+        }
+
+        return $converRet;
+    }
+
     public function getUnProcessList($lastID, $reqNum) {
         $db = $this->getDB();
         $sql = sprintf(

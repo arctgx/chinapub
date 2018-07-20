@@ -14,6 +14,43 @@ class DataService {
         $this->_dao_rec_book       = new Dao_RecBook();
     }
 
+    // 查询 首页
+    public function queryHomePage($queryNum) {
+        $bookList = $this->_dao_home_page_book->queryRencentBooks($queryNum);
+        if (empty($bookList)) {
+            return array();
+        }
+        $bookIDList = array_column($bookList, 'book_id');
+
+        $bookInfos = $this->_dao_book->getInfoByBookIDList($bookIDList);
+
+        $retData = array();
+        foreach ($bookList as $item) {
+            $bookID = $item['book_id'];
+            if (!isset($bookInfos[$bookID])) {
+                $strLog = sprintf('can not get book info of book_id [%d]', $bookID);
+                Log::warning($strLog);
+                continue;
+            }
+            $oneBookInfo = $bookInfos[$bookID];
+
+            if ($oneBookInfo['process_status'] == Dao_Book::STATUS_TODO) {
+                $strLog = sprintf('book info not processed, book_id [%d]', $bookID);
+                Log::warning($strLog);
+                continue;
+            }
+
+            $retData[] = array(
+                'book_id'       => $bookID,
+                'title'         => $oneBookInfo['title'],
+                'url'           => $oneBookInfo['book_url'],
+                'homepage_time' => date('Y-m-d H:i:s', $item['create_at']),
+            );
+        }
+
+        return $retData;
+    }
+
     // 存储
     public function checkAndSaveHomePageBook($bookID) {
         $daoHomePageBook = $this->_dao_home_page_book;

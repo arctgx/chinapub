@@ -58,8 +58,26 @@ class HomePageTask extends TaskBase {
         }
     }
 
+    // php -f cli.php HomePage Query book_num=20
     public function QueryAction() {
-        echo "todo\n";
+        $bookNum = $this->getParam('book_num', 10);
+        $dataService = new DataService();
+        $info = $dataService->queryHomePage($bookNum);
+        if (empty($info)) {
+            printf("list is empty\n");
+            return ;
+        }
+
+        $cnt = 0;
+        foreach ($info as $oneBook) {
+            printf("book %d\n", ++$cnt);
+
+            printf("      id: %d\n", $oneBook['book_id']);
+            printf("    名称: %s\n", $oneBook['title']);
+            printf("     url: %s\n", $oneBook['url']);
+            printf("    时间: %s\n", $oneBook['homepage_time']);
+            printf("\n");
+        }
     }
 }
 

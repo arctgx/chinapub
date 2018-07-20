@@ -4,6 +4,20 @@ class Dao_HomePageBook extends DaoBase {
 
     protected $_table = 'home_page_book';
 
+    public function queryRencentBooks($reqNum) {
+        $db = $this->getDB();
+
+        $sql = sprintf(
+            'SELECT * FROM %s ORDER BY id DESC LIMIT %d',
+            $this->_table, $reqNum
+        );
+        $stmt = $db->prepare($sql);
+        $ret = $stmt->execute();
+
+        $queryRet = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return empty($queryRet) ? array() : $queryRet;
+    }
+
     public function save($bookID) {
         $db = $this->getDB();
 
